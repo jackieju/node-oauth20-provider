@@ -17,6 +17,7 @@ module.exports.getRedirectUri = function(client) {
 };
 
 module.exports.fetchById = function(clientId, cb) {
+	log("get client by id "+clientId);
     redis.get(util.format(KEY.CLIENT, clientId), function(err, stringified) {
         if (err) cb(err);
         else if (!stringified) cb();

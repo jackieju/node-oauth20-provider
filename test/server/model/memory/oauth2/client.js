@@ -9,7 +9,10 @@ module.exports.getRedirectUri = function(client) {
 };
 
 module.exports.fetchById = function(clientId, cb) {
+	console.trace("fetchById in memory "+ clientId);
+	console.log(clients.length+" clients");
     for (var i in clients) {
+		console.log("client id "+clients[i].id);
         if (clientId == clients[i].id) return cb(null, clients[i]);
     }
     cb();

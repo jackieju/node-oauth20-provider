@@ -19,6 +19,7 @@ module.exports.initialize = function() {
         function(cb) {
             var model = require('./oauth2/client.js');
             async.eachSeries(data.clients, function(client, cb) {
+	console.trace("redis set client "+util.format(model.KEY.CLIENT, client.id) +"==>"+JSON.stringify(client)+", cb="+inspect(cb));
                 redis.set(util.format(model.KEY.CLIENT, client.id), JSON.stringify(client), cb);
             }, cb)
         }

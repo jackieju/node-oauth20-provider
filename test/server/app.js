@@ -1,3 +1,27 @@
+global.inspect = function (obj){
+	 var props = "";
+
+	var type = typeof(obj);
+	if (type == "string" || type == "number" || type == "boolean")
+		return obj+"["+typeof(obj)+"]";
+
+	for(var p in obj){
+
+	        if(typeof(obj[p])=="function"){
+	         // obj[p]();
+			// props += "function "+p+"()\n";
+	        }else{
+	          	props+="["+typeof(obj[p])+"]" +  p + "=" + obj[p] + "\n";
+			// the recursive may cause dead loop
+	           // if (typeof(obj[p])=="object")
+	                   // props+="[\n"+inspect(obj[p])+"\n]\n";
+	        }
+	    }
+
+	   // alert(props);
+	return obj+"["+typeof(obj)+"]:\n"+props;
+};
+	
 var TYPE = 'memory'; // Pg, redis, mongodb also available for example
 
 var
@@ -14,11 +38,14 @@ var
     model       = require('./model/' + TYPE);
 
 // Middleware
+// server.use(logger());
 server.use(cookieParser());
 server.use(session({ secret: 'oauth20-provider-test-server', resave: false, saveUninitialized: false }));
 server.use(bodyParser.urlencoded({extended: false}));
 server.use(bodyParser.json());
 server.use(oauth20.inject());
+console.log(__dirname + '/public');
+server.use(express.static(__dirname + '/public'));
 
 // View
 server.set('views', './view');
@@ -79,8 +106,16 @@ server.get('/client', oauth20.middleware.bearer, function(req, res) {
     res.send('Hi! Dear client ' + req.oauth2.accessToken.clientId + '!');
 });
 
+// homepage
+// server.get('/', function (req, res) {
+//   res.sendFile(__dirname + '/index.html');
+// });
+
+
+
 // Expose functions
 var start = module.exports.start = function() {
+	
     server.listen(config.server.port, config.server.host, function(err) {
         if (err) console.error(err);
         else console.log('Server started at ' + config.server.host + ':' + config.server.port);
